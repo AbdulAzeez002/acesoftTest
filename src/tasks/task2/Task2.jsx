@@ -1,59 +1,50 @@
 import React, { useEffect, useState } from "react";
-import Counter from "./counter/Counter";
-import SumCard from "./sum-card/SumCard";
-import ResetButton from "./reset-button/ResetButton";
-import { useSelector, useDispatch } from "react-redux";
-import { reset } from "../../redux/slices/counterSlice";
+import useTheme from "../../hooks/useTheme";
 
 const Task2 = () => {
-  const data = useSelector((state) => state.counter.counters);
-  const [showTitle, setShowTitle] = useState(false);
+  const [searchInput, setSearchInput] = useState("firstInput");
+  const [initial, setInitial] = useState(true);
 
-  const dispatch = useDispatch();
-
-  const getSum = () => {
-    let sum = 0;
-
-    data?.forEach((counter) => {
-      sum = sum + counter.value;
-    });
-    return sum;
+  const fetchApi = (value) => {
+    console.log(value, "searchinput");
   };
 
-  const sum = getSum();
-
-  const handleReset = () => {
-    dispatch(reset());
+  const handleChange = (value) => {
+    setSearchInput(value);
   };
 
-  useEffect(() => {
-    setTimeout(() => {
-      setShowTitle(true);
-    }, 3000);
-  }, []);
+  const { themes, onToggleTheme } = useTheme();
+
+  //   useEffect(() => {
+  //     // let interval;
+  //     if (initial) {
+  //       setInitial(false);
+  //     }
+  //     if (!initial) {
+  //       setInterval(() => setCounter((prev) => prev + 1), 3000);
+  //     }
+  //     // setCounter(0);
+
+  //     // return clearInterval(interval);
+  //   }, [searchInput]);
 
   return (
-    <div style={{ display: "flex", justifyContent: "center" }}>
-      <div style={{ width: "400px", borderStyle: "solid" }}>
-        {showTitle && <h4 style={{ textAlign: "center" }}>Page Title</h4>}
-
-        {data?.map((counter) => (
-          <div key={counter?.id} style={{ margin: "4px" }}>
-            <Counter
-              name={counter.name}
-              value={counter.value}
-              id={counter.id}
-            />
-            {counter.value == 10 && (
-              <p style={{ color: "red" }}>
-                Counter {counter.name} has reached maximum value
-              </p>
-            )}
-          </div>
-        ))}
-
-        <ResetButton handleReset={handleReset} />
-        <SumCard sum={sum} />
+    <div
+      style={{
+        backgroundColor: themes === "dark" ? "black" : "white",
+        height: "400px",
+      }}
+    >
+      <div>
+        <input
+          type="text"
+          placeholder="search text"
+          value={searchInput}
+          onChange={(e) => handleChange(e.target.value)}
+        />
+      </div>
+      <div>
+        <button onClick={onToggleTheme}>Toggle Theme</button>
       </div>
     </div>
   );
